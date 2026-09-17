@@ -184,6 +184,7 @@ const gameDuration = 20;
 
 function updateTimerMessage(secondsRemaining) {
     if (secondsRemaining === 0) {
+        gameOver = true;
         timerMessage.textContent = "TIME'S UP!";
         timerMessage.style.top = "50%";
         timerMessage.style.right = "auto";
