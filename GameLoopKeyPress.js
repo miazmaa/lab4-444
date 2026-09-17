@@ -8,7 +8,7 @@ scene.background = new THREE.Color(0x87ceeb);
 //score
 let score = 0;
 const scoreMessage = document.createElement("div");
-scoreMessage.textContent = "Score: " + score;
+scoreMessage.textContent = "Score: " + score + " / 10";
 scoreMessage.style.position = "fixed";
 scoreMessage.style.top = "24px";
 scoreMessage.style.left = "24px";
@@ -227,20 +227,10 @@ function updateTimer() {
 }
 
 function updateCollisionMessage(isColliding) {
-    if (targetFound) {
+    if (collectibles.length === 0) {
         collisionMessage.textContent = "Congratulations! You win!";
         collisionMessage.style.display = "block";
         collisionMessage.style.color = "#22cc55";
-    } else if (isColliding) {
-        collisionMessage.textContent = "Collision is happening!";
-        collisionTime += 0.05;
-        collisionMessage.style.display = "block";
-        collisionMessage.style.color = `hsl(${(collisionTime * 180) % 360}, 100%, 50%)`;
-    } else {
-        collisionTime = 0;
-        collisionMessage.textContent = "Collision is happening!";
-        collisionMessage.style.display = "none";
-        collisionMessage.style.color = "#ffffff";
     }
 }
 
@@ -260,17 +250,16 @@ function handleCollisions() {
             isColliding = true;
             object.userData.collected = true;
             object.visible = false;
+            collectibles.splice(collectibles.indexOf(object), 1);
             scene.remove(object);
             score += 1;
-            scoreMessage.textContent = "Score: " + score;
-
-            if (object === targetObject) {
-                targetFound = true;
-            }
+            scoreMessage.textContent = "Score: " + score + " / 10";
         } else {
             object.visible = true;
         }
     });
+
+    updateCollisionMessage(isColliding);
 }
 
 // Animation Loop
