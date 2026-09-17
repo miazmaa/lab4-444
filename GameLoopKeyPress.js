@@ -150,7 +150,7 @@ const planeObjects = [
     )
 ];
 
-const targetObject = planeObjects[planeObjects.length - 1];
+const targetObject = collectibles[collectibles.length - 1];
 
 function placeObjects(objects) {
     const objectPositions = [];
@@ -248,19 +248,8 @@ function handleCollisions() {
     playerBounds.setFromObject(player);
     let isColliding = false;
 
-    planeObjects.forEach((object) => {
-        if (object === targetObject) {
-            if (targetFound) {
-                return;
-            }
-
-            objectBounds.setFromObject(object);
-
-            if (playerBounds.intersectsBox(objectBounds)) {
-                targetFound = true;
-                object.visible = false;
-            }
-
+    collectibles.forEach((object) => {
+        if (object.userData.collected) {
             return;
         }
 
@@ -269,13 +258,19 @@ function handleCollisions() {
 
         if (objectIsColliding) {
             isColliding = true;
-            object.visible = Math.floor(performance.now() / 100) % 2 === 0;
+            object.userData.collected = true;
+            object.visible = false;
+            scene.remove(object);
+            score += 1;
+            scoreMessage.textContent = "Score: " + score;
+
+            if (object === targetObject) {
+                targetFound = true;
+            }
         } else {
             object.visible = true;
         }
     });
-
-    updateCollisionMessage(isColliding);
 }
 
 // Animation Loop
@@ -284,6 +279,10 @@ function animate() {
     requestAnimationFrame(animate);
 
     updateTimer();
+
+    collectibles.forEach((collectible) => {
+        collectible.rotation.y += 0.02;
+    });
 
     // WASD Controls
     if (keys["w"]) {
@@ -339,4 +338,4 @@ window.addEventListener("resize", () => {
         window.innerHeight
     );
 
-}); 
+});
