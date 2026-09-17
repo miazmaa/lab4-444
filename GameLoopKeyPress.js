@@ -4,6 +4,7 @@ import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87ceeb);
 
+let gameOver = false;
 
 //score
 let score = 0;
@@ -127,28 +128,6 @@ for (let i = 0; i < 10; i++) {
     scene.add(collectible);
 }
 
-const planeObjects = [
-    new THREE.Mesh(
-        new THREE.SphereGeometry(1, 32, 16),
-        new THREE.MeshStandardMaterial({ color: 0xff6600 })
-    ),
-    new THREE.Mesh(
-        new THREE.ConeGeometry(1, 2, 32),
-        new THREE.MeshStandardMaterial({ color: 0xff00aa })
-    ),
-    new THREE.Mesh(
-        new THREE.CylinderGeometry(1, 1, 2, 32),
-        new THREE.MeshStandardMaterial({ color: 0xffff00 })
-    ),
-    new THREE.Mesh(
-        new THREE.TorusGeometry(1, 0.35, 16, 32),
-        new THREE.MeshStandardMaterial({ color: 0x00ffff })
-    ),
-    new THREE.Mesh(
-        new THREE.IcosahedronGeometry(1.1, 0),
-        new THREE.MeshStandardMaterial({ color: 0x22cc55 })
-    )
-];
 
 const targetObject = collectibles[collectibles.length - 1];
 
@@ -180,7 +159,6 @@ function placeObjects(objects) {
     });
 }
 
-placeObjects(planeObjects);
 
 // Keyboard State Object
 const keys = {};
@@ -254,6 +232,9 @@ function handleCollisions() {
             scene.remove(object);
             score += 1;
             scoreMessage.textContent = "Score: " + score + " / 10";
+            if (collectibles.length === 0) {
+                gameOver = true;
+            }
         } else {
             object.visible = true;
         }
@@ -272,39 +253,40 @@ function animate() {
     collectibles.forEach((collectible) => {
         collectible.rotation.y += 0.02;
     });
+    if (!gameOver) {
+        // WASD Controls
+        if (keys["w"]) {
+            player.position.z -= speed;
+        }
 
-    // WASD Controls
-    if (keys["w"]) {
-        player.position.z -= speed;
-    }
+        if (keys["s"]) {
+            player.position.z += speed;
+        }
 
-    if (keys["s"]) {
-        player.position.z += speed;
-    }
+        if (keys["a"]) {
+            player.position.x -= speed;
+        }
 
-    if (keys["a"]) {
-        player.position.x -= speed;
-    }
+        if (keys["d"]) {
+            player.position.x += speed;
+        }
 
-    if (keys["d"]) {
-        player.position.x += speed;
-    }
+        // Arrow Key Controls
+        if (keys["arrowup"]) {
+            player.position.z -= speed;
+        }
 
-    // Arrow Key Controls
-    if (keys["arrowup"]) {
-        player.position.z -= speed;
-    }
+        if (keys["arrowdown"]) {
+            player.position.z += speed;
+        }
 
-    if (keys["arrowdown"]) {
-        player.position.z += speed;
-    }
+        if (keys["arrowleft"]) {
+            player.position.x -= speed;
+        }
 
-    if (keys["arrowleft"]) {
-        player.position.x -= speed;
-    }
-
-    if (keys["arrowright"]) {
-        player.position.x += speed;
+        if (keys["arrowright"]) {
+            player.position.x += speed;
+        }
     }
 
     handleCollisions();
