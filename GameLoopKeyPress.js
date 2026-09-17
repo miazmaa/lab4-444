@@ -4,6 +4,25 @@ import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87ceeb);
 
+
+//score
+let score = 0;
+const scoreMessage = document.createElement("div");
+scoreMessage.textContent = "Score: " + score;
+scoreMessage.style.position = "fixed";
+scoreMessage.style.top = "24px";
+scoreMessage.style.left = "24px";
+scoreMessage.style.fontFamily = "sans-serif";
+scoreMessage.style.fontSize = "28px";
+scoreMessage.style.fontWeight = "bold";
+scoreMessage.style.color = "#ffffff";
+scoreMessage.style.textShadow = "2px 2px 4px #000000";
+scoreMessage.style.display = "block";
+scoreMessage.style.zIndex = "1";
+document.body.appendChild(scoreMessage);
+
+
+
 // Camera
 const camera = new THREE.PerspectiveCamera(
     75,
