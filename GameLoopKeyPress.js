@@ -109,6 +109,24 @@ const player = new THREE.Mesh(
 player.position.y = 0.5;
 scene.add(player);
 
+//cube collectibles
+const collectibles = [];
+for (let i = 0; i < 10; i++) {
+    const collectibleGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+    const collectibleMaterial = new THREE.MeshStandardMaterial({
+        color: 0xff0000
+    });
+
+    const collectible = new THREE.Mesh(
+        collectibleGeometry,
+        collectibleMaterial
+    );
+    collectible.position.x = (Math.random() - 0.5) * 20;
+    collectible.position.z = (Math.random() - 0.5) * 20;
+    collectibles.push(collectible);
+    scene.add(collectible);
+}
+
 const planeObjects = [
     new THREE.Mesh(
         new THREE.SphereGeometry(1, 32, 16),
@@ -321,4 +339,4 @@ window.addEventListener("resize", () => {
         window.innerHeight
     );
 
-});
+}); 
