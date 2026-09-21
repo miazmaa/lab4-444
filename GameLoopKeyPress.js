@@ -185,7 +185,7 @@ const gameDuration = 20;
 function updateTimerMessage(secondsRemaining) {
     if (secondsRemaining === 0) {
         gameOver = true;
-        timerMessage.textContent = "TIME'S UP!";
+        timerMessage.textContent = "GAME OVER!";
         timerMessage.style.top = "50%";
         timerMessage.style.right = "auto";
         timerMessage.style.left = "50%";
@@ -206,10 +206,10 @@ function updateTimer() {
 }
 
 function updateCollisionMessage(isColliding) {
-    if (collectibles.length === 0) {
-        collisionMessage.textContent = "Congratulations! You win!";
+    if (isColliding) {
+        collisionMessage.textContent = "GAME OVER!";
         collisionMessage.style.display = "block";
-        collisionMessage.style.color = "#22cc55";
+        collisionMessage.style.color = "#ff3333";
     }
 }
 
@@ -229,13 +229,7 @@ function handleCollisions() {
             isColliding = true;
             object.userData.collected = true;
             object.visible = false;
-            collectibles.splice(collectibles.indexOf(object), 1);
-            scene.remove(object);
-            score += 1;
-            scoreMessage.textContent = "Score: " + score + " / 10";
-            if (collectibles.length === 0) {
-                gameOver = true;
-            }
+            gameOver = true;
         } else {
             object.visible = true;
         }
