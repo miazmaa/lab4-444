@@ -6,21 +6,6 @@ scene.background = new THREE.Color(0x87ceeb);
 let lastSpawn = 0;
 let gameOver = false;
 
-//score
-let score = 0;
-const scoreMessage = document.createElement("div");
-scoreMessage.textContent = "Score: " + score;
-scoreMessage.style.position = "fixed";
-scoreMessage.style.top = "24px";
-scoreMessage.style.left = "24px";
-scoreMessage.style.fontFamily = "sans-serif";
-scoreMessage.style.fontSize = "28px";
-scoreMessage.style.fontWeight = "bold";
-scoreMessage.style.color = "#ffffff";
-scoreMessage.style.textShadow = "2px 2px 4px #000000";
-scoreMessage.style.display = "block";
-scoreMessage.style.zIndex = "1";
-document.body.appendChild(scoreMessage);
 
 
 
@@ -41,19 +26,19 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 const collisionMessage = document.createElement("div");
-collisionMessage.textContent = "Collision is happening!";
 collisionMessage.style.position = "fixed";
-collisionMessage.style.top = "24px";
+collisionMessage.style.top = "50%";
 collisionMessage.style.left = "50%";
-collisionMessage.style.transform = "translateX(-50%)";
+collisionMessage.style.transform = "translate(-50%, -50%)";
 collisionMessage.style.fontFamily = "sans-serif";
-collisionMessage.style.fontSize = "28px";
+collisionMessage.style.fontSize = "15vw";
 collisionMessage.style.fontWeight = "bold";
-collisionMessage.style.color = "#ffffff";
+collisionMessage.style.color = "#ff3333";
 collisionMessage.style.textShadow = "2px 2px 4px #000000";
 collisionMessage.style.display = "none";
 collisionMessage.style.zIndex = "1";
 document.body.appendChild(collisionMessage);
+
 
 const timerMessage = document.createElement("div");
 timerMessage.style.position = "fixed";
@@ -114,7 +99,7 @@ scene.add(player);
 const obstacles = [];
 
 function spawnObstacle() {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 30; i++) {
     const obstacleGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
     const obstacleMaterial = new THREE.MeshStandardMaterial({
         color: 0xff0000
@@ -188,7 +173,7 @@ const gameStartTime = performance.now();
 const gameDuration = 20;
 
 function updateTimerMessage(secondsRemaining) {
-    timerMessage.textContent = `Time: ${secondsRemaining}`;
+    timerMessage.textContent = `Score: ${secondsRemaining}`;
     
 }
 
@@ -249,7 +234,13 @@ lastSpawn = currentTime;
 
     obstacles.forEach((obstacle) => {
         obstacle.position.y -= 0.05;
+
+        if (obstacle.position.y < -2) {
+            scene.remove(obstacle);
+            obstacles.splice(obstacles.indexOf(obstacle), 1);
+        }
     });
+    
     if (!gameOver) {
         // WASD Controls
         if (keys["w"]) {
