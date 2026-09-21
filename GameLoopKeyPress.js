@@ -110,26 +110,31 @@ const player = new THREE.Mesh(
 player.position.y = 0.5;
 scene.add(player);
 
-//cube collectibles
-const collectibles = [];
-for (let i = 0; i < 10; i++) {
-    const collectibleGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
-    const collectibleMaterial = new THREE.MeshStandardMaterial({
+
+const obstacles = [];
+
+function spawnObstacle() {
+    for (let i = 0; i < 20; i++) {
+    const obstacleGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+    const obstacleMaterial = new THREE.MeshStandardMaterial({
         color: 0xff0000
     });
 
-    const collectible = new THREE.Mesh(
-        collectibleGeometry,
-        collectibleMaterial
+    const obstacle = new THREE.Mesh(
+        obstacleGeometry,
+        obstacleMaterial
     );
-    collectible.position.x = (Math.random() - 0.5) * 20;
-    collectible.position.z = (Math.random() - 0.5) * 20;
-    collectibles.push(collectible);
-    scene.add(collectible);
+    obstacle.position.x = (Math.random() - 0.5) * 20;
+    obstacle.position.y = 12;
+    obstacle.position.z = (Math.random() - 0.5) * 20;
+    obstacles.push(obstacle);
+    scene.add(obstacle);
+}
 }
 
+spawnObstacle();
 
-const targetObject = collectibles[collectibles.length - 1];
+const targetObject = obstacles[obstacles.length - 1];
 
 function placeObjects(objects) {
     const objectPositions = [];
@@ -217,7 +222,7 @@ function handleCollisions() {
     playerBounds.setFromObject(player);
     let isColliding = false;
 
-    collectibles.forEach((object) => {
+    obstacles.forEach((object) => {
         if (object.userData.collected) {
             return;
         }
@@ -245,8 +250,8 @@ function animate() {
 
     updateTimer();
 
-    collectibles.forEach((collectible) => {
-        collectible.rotation.y += 0.02;
+    obstacles.forEach((obstacle) => {
+        obstacle.position.y -= 0.05;
     });
     if (!gameOver) {
         // WASD Controls
