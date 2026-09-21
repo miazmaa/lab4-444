@@ -3,13 +3,13 @@ import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 // Scene
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87ceeb);
-
+let lastSpawn = 0;
 let gameOver = false;
 
 //score
 let score = 0;
 const scoreMessage = document.createElement("div");
-scoreMessage.textContent = "Score: " + score + " / 10";
+scoreMessage.textContent = "Score: " + score;
 scoreMessage.style.position = "fixed";
 scoreMessage.style.top = "24px";
 scoreMessage.style.left = "24px";
@@ -188,25 +188,17 @@ const gameStartTime = performance.now();
 const gameDuration = 20;
 
 function updateTimerMessage(secondsRemaining) {
-    if (secondsRemaining === 0) {
-        gameOver = true;
-        timerMessage.textContent = "GAME OVER!";
-        timerMessage.style.top = "50%";
-        timerMessage.style.right = "auto";
-        timerMessage.style.left = "50%";
-        timerMessage.style.transform = "translate(-50%, -50%)";
-        timerMessage.style.width = "100%";
-        timerMessage.style.textAlign = "center";
-        timerMessage.style.fontSize = "15vw";
-        timerMessage.style.color = "#ff3333";
-    } else {
-        timerMessage.textContent = `Time: ${secondsRemaining}`;
-    }
+    timerMessage.textContent = `Time: ${secondsRemaining}`;
+    
 }
 
 function updateTimer() {
+    if (gameOver) {
+        return;
+    }
+
     const elapsedSeconds = Math.floor((performance.now() - gameStartTime) / 1000);
-    const secondsRemaining = Math.max(gameDuration - elapsedSeconds, 0);
+    const secondsRemaining = Math.max(elapsedSeconds, 0);
     updateTimerMessage(secondsRemaining);
 }
 
@@ -247,7 +239,12 @@ function handleCollisions() {
 function animate() {
 
     requestAnimationFrame(animate);
-
+    const currentTime = performance.now();
+    if(currentTime - lastSpawn > 1000)
+{
+spawnObstacle();
+lastSpawn = currentTime;
+}
     updateTimer();
 
     obstacles.forEach((obstacle) => {
